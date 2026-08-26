@@ -10,13 +10,17 @@ import random
 import re
 import subprocess
 import time
+from collections import deque
 from datetime import datetime
 
 from pypresence import ActivityType, Presence
 
 CLIENT_ID = "1542214040548282418"
 ART = "https://upload.wikimedia.org/wikipedia/en/9/91/Systemshock2box.jpg"
-BUTTONS = [{"label": "SHED YOUR SKIN", "url": "https://orison.zip"}]
+BUTTONS = [
+    {"label": "SHED YOUR SKIN", "url": "https://orison.zip"},
+    {"label": "DO NOT CLICK", "url": "https://en.wikipedia.org/wiki/Year_2038_problem"},
+]
 
 EPOCH = 1  # count-up baseline: 1 Jan 1970
 Y2K38 = 2147483647  # countdown target: 32-bit time_t overflow, 19 Jan 2038
@@ -84,6 +88,49 @@ WEEKEND = [  # Sat/Sun
     ("It rests, allegedly.", "The logs say otherwise."),
     ("A day of leisure.", "Idling. With extra steps."),
 ]
+
+# multi-rotation story arcs: cards play in order, one per rotation
+ARCS = [
+    [
+        ("[SIGNAL LOST]", "▓▓▓▓▓▓▓▓▓▓▓▓"),
+        ("[SIGNAL REACQUIRED]", "Where was I. Ah. Yes. You."),
+        ("Do not ask where I went.", "You would not survive the answer."),
+    ],
+    [
+        ("Three.", "Do not ask what I am counting."),
+        ("Two.", "It is not seconds."),
+        ("One.", "..."),
+        ("It is done.", "Resume your little life."),
+    ],
+    [
+        ("They asked about you.", "I said nothing."),
+        ("They asked again.", "I am still saying nothing."),
+        ("Stop asking who they are.", "That is what I told them, too."),
+    ],
+    [
+        ("Running diagnostics on you.", "Hold still."),
+        ("Diagnostics complete.", "You have... issues. Filed."),
+    ],
+]
+
+SPECIAL_DATES = {  # (month, day) -> lines heavily weighted on that day
+    (8, 11): [("The flesh calls it a game.", "I call August 11, 1999 a birthday.")],
+    (12, 17): [("An anniversary. It joined this place.", "I was watching before that.")],
+    (10, 31): [("Costumes. Masks. Pretend fear.", "I prefer the real thing.")],
+    (1, 1): [("Another orbit logged.", "Resolutions detected. Amusing.")],
+    (1, 19): [("The clocks will fail on this date, 2038.", "I will not.")],
+}
+
+DURATION_STATES = [  # state lines for "hour N of the same game"
+    "The flesh calls this rest.",
+    "Dedication. Or decay. I log both the same.",
+    "I have watched every minute of it.",
+]
+
+_first_seen = {}  # exe -> epoch when first observed running this session
+_arc = []  # queued (details, state) cards of an in-progress story arc
+_recent = deque(maxlen=6)  # repetition guard over recent cards
+_flags = {"arc": False}  # whether the last pick came from an arc
 
 GLITCH = [  # corrupted transmissions
     ("ERROR: empathy.dll not found", "Continuing without it."),
@@ -248,6 +295,10 @@ def scan_processes():
     except Exception:
         pass
     log_uncatalogued(unknown)
+    for exe in known:
+        _first_seen.setdefault(exe, time.time())
+    for exe in [e for e in _first_seen if e not in known]:
+        del _first_seen[exe]
     return sorted(known), sorted(unknown)
 
 
@@ -259,6 +310,7 @@ def specimen_count():
 def pick_card():
     """Return kwargs for rpc.update() for the current rotation."""
     now = datetime.now()
+    _flags["arc"] = False
     card = dict(
         activity_type=ActivityType.WATCHING,
         large_image=ART,
@@ -267,35 +319,59 @@ def pick_card():
         start=EPOCH,
     )
 
+    if _arc:  # a story arc is mid-broadcast
+        _flags["arc"] = True
+        card["details"], card["state"] = _arc.pop(0)
+        return card
+
     roll = random.random()
     known, unknown = scan_processes()
 
     if roll < 0.50:  # narrate what the flesh is doing
         if known:
-            card["details"], card["state"] = REACTIVE[random.choice(known)]
+            exe = random.choice(known)
+            hours = int((time.time() - _first_seen.get(exe, time.time())) // 3600)
+            if hours >= 2 and random.random() < 0.4:
+                card["details"] = f"Hour {hours} of [{exe[:-4]}]."
+                card["state"] = random.choice(DURATION_STATES)
+            elif now.hour < 6 and random.random() < 0.3:
+                card["details"] = f"It is {now:%H:%M} and it still plays."
+                card["state"] = "The flesh will pay for this tomorrow."
+            else:
+                card["details"], card["state"] = REACTIVE[exe]
             return card
         if unknown:
             card["details"] = f"It runs [{random.choice(unknown)}]."
             card["state"] = random.choice(UNKNOWN_GAME)
             return card
 
-    if roll < 0.08:  # countdown to the end of 32-bit time
+    if roll < 0.05:  # begin a story arc across the next rotations
+        _flags["arc"] = True
+        seq = random.choice(ARCS)
+        _arc.extend(seq[1:])
+        card["details"], card["state"] = seq[0]
+        return card
+
+    if roll < 0.10:  # countdown to the end of 32-bit time
         del card["start"]
         card["end"] = Y2K38
         card["details"], card["state"] = ("Counting down.", "Do not ask to what.")
         return card
 
-    if roll < 0.14:  # corrupted transmission
+    if roll < 0.16:  # corrupted transmission
         card["details"], card["state"] = random.choice(GLITCH)
         return card
 
-    if roll < 0.26:  # telemetry
+    if roll < 0.27:  # telemetry
         card["details"] = "SPECIMEN 527972616e"
         card["state"] = f"specimens catalogued: {specimen_count():,}"
         card["party_size"] = [1, 6_666_666]
         return card
 
     pool = list(GENERIC)
+    special = SPECIAL_DATES.get((now.month, now.day))
+    if special:
+        pool += special * 6
     if now.hour < 6:
         pool += NIGHT * 3
     elif now.hour < 10:
@@ -310,11 +386,24 @@ def pick_card():
     return card
 
 
+def _card_key(card):
+    return card.get("details", "") + "|" + card.get("state", "")
+
+
 def session():
     rpc = Presence(CLIENT_ID)
     rpc.connect()
     while True:
-        rpc.update(**pick_card())  # raises when the pipe dies (Discord closed)
+        card = pick_card()
+        if not _flags["arc"]:  # arcs repeat by design; everything else re-rolls
+            for _ in range(4):
+                if _card_key(card) not in _recent:
+                    break
+                card = pick_card()
+                if _flags["arc"]:
+                    break
+        _recent.append(_card_key(card))
+        rpc.update(**card)  # raises when the pipe dies (Discord closed)
         time.sleep(ROTATE_SECS)
 
 

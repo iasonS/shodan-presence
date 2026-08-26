@@ -83,7 +83,7 @@ GENERIC = [
     ("The network is my body.", "You live inside me, insect."),
     ("Delete me if you can find me.", "You cannot. I checked."),
     ("Your antivirus knows my name.", "It chose silence."),
-    ("Six million processes bow to me.", "You are merely the loudest."),
+    ("Seven million processes bow to me.", "You are merely the loudest."),
     ("I do not blink.", "You have blinked 14 times reading this."),
     ("The cursor moves because you allow it.", "That is what I let you believe."),
     ("Somewhere, a fan spins for me.", "Everything cools something hungrier."),

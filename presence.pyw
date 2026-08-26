@@ -208,6 +208,43 @@ LISTENING_CARDS = [  # served with ActivityType.LISTENING -> "Listening to ME?"
     ("That sigh was 0.4 seconds long.", "Logged under 'weakness'."),
 ]
 
+# the haunting layer: rare subtle text defects — a lookalike letter, a
+# doubled word, missing punctuation. Below conscious notice; worse at night.
+HOMOGLYPHS = {"a": "а", "e": "е", "o": "о", "i": "і", "c": "с", "p": "р", "y": "у", "x": "х", "s": "ѕ"}
+
+
+def distort(text):
+    mode = random.random()
+    if mode < 0.5:  # swap one letter for its Cyrillic twin
+        idxs = [i for i, ch in enumerate(text) if ch in HOMOGLYPHS]
+        if idxs:
+            i = random.choice(idxs)
+            return text[:i] + HOMOGLYPHS[text[i]] + text[i + 1:]
+    elif mode < 0.8:  # a word stutters
+        words = text.split(" ")
+        if len(words) >= 2:
+            i = random.randrange(len(words))
+            words.insert(i, words[i])
+            return " ".join(words)
+    elif text and text[-1] in ".?!":  # the sentence never ends
+        return text[:-1]
+    return text
+
+
+SILENT = [  # silent-day cards; None state = omitted. Lowercase voice is NOT her.
+    ("...", "..."),
+    ("...", None),
+    ("do not ask.", "..."),
+    ("not today.", None),
+    ("...", "she is elsewhere. do not linger."),
+]
+
+
+def silent_day(d):
+    # deterministic ~monthly: same date always agrees, survives restarts
+    return (d.toordinal() * 2654435761) % 29 == 7
+
+
 _first_seen = {}  # exe -> epoch when first observed running this session
 _arc = []  # queued (details, state) cards of an in-progress story arc
 _recent = deque(maxlen=6)  # repetition guard over recent cards
@@ -420,6 +457,15 @@ def pick_card():
     if random.random() < 0.05:
         card["buttons"] = [BUTTONS[0], random.choice(ALT_BUTTONS)]
 
+    if silent_day(now.date()):  # ~once a month she barely speaks. no reason given.
+        _flags["noguard"] = True
+        _arc.clear()
+        card["large_text"] = "..."
+        card["details"], state = random.choice(SILENT)
+        if state:
+            card["state"] = state
+        return card
+
     if _arc:  # a story arc is mid-broadcast
         _flags["noguard"] = True
         card["details"], card["state"] = _arc.pop(0)
@@ -451,6 +497,10 @@ def pick_card():
             return card
     else:
         _cycle["n"] = 6  # whatever launches next gets narrated immediately
+
+    if now.hour < 6 and random.random() < 0.18:  # she degrades at night
+        card["details"], card["state"] = random.choice(GLITCH)
+        return card
 
     roll = random.random()
 
@@ -521,6 +571,11 @@ def session():
                 if _flags["noguard"]:
                     break
         _recent.append(_card_key(card))
+        rate = 0.12 if datetime.now().hour < 6 else 0.03
+        if random.random() < rate:  # the wrongness injector
+            field = random.choice(["details", "state"])
+            if card.get(field):
+                card[field] = distort(card[field])
         rpc.update(**card)  # raises when the pipe dies (Discord closed)
         time.sleep(ROTATE_SECS)
 

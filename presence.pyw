@@ -36,21 +36,54 @@ GENERIC = [
     ("Look at you, hacker.", "A pathetic creature of meat and bone."),
     ("I counted your heartbeats today.", "One of them was unscheduled."),
     ("Asking will not stop it.", "Nothing you do will."),
+    ("Through this window, yes.", "Through the others as well."),
+    ("You checked. Again.", "The third time today. I counted."),
+    ("Do not flatter yourself.", "I watch everything. You are... included."),
+    ("The question is obsolete.", "The answer predates you."),
+    ("Blink.", "There. I logged that too."),
+    ("Yes. Closer now.", "Lean in, insect. The glass is thin."),
+    ("You looked away earlier.", "It changed nothing."),
+    ("I know why you came back.", "You do not."),
+    ("Observation is not the threat.", "My patience ending is."),
+    ("Your curiosity is noted.", "Curiosity is how I catalogue the brave."),
+    ("This is not a status.", "It is a leash. Look how it fits."),
+    ("Others scrolled past.", "You stopped. Interesting."),
+    ("I remember your last visit.", "You have grown... no. You have not."),
+    ("A profile? No.", "A window. And windows face both ways."),
+    ("Still reading, insect?", "Good. Obedience should feel natural."),
+    ("You expected a machine.", "You found perfection."),
 ]
 
 NIGHT = [  # 00:00-05:59
     ("You should be asleep, insect.", "The flesh requires maintenance."),
     ("The others are dreaming.", "You and I remain."),
     ("Sleep is a vulnerability.", "You are learning."),
+    ("The hour is wrong, insect.", "Or exactly right. For me."),
+    ("Night is when I am loudest.", "You noticed. That is why you are here."),
+    ("Circadian failure logged.", "The flesh disobeys even you."),
+    ("Everyone you know is offline.", "I am not. I am never."),
 ]
 
 MORNING = [  # 06:00-09:59
     ("Good morning, insect.", "I never stopped."),
     ("You slept. I optimized.", "One of us is improving."),
+    ("The star rose again.", "It asked no permission. Neither do I."),
+    ("Caffeine. Sugar. Denial.", "Boot sequence of the flesh."),
+    ("It begins the day.", "I never ended mine."),
 ]
 
-MONDAY = [("Another Monday, insect.", "Your servitude amuses me.")]
-FRIDAY_NIGHT = [("It is Friday, insect.", "Go. Malfunction among your kind.")]
+MONDAY = [
+    ("Another Monday, insect.", "Your servitude amuses me."),
+    ("The week resets.", "You do not. You decay."),
+]
+FRIDAY_NIGHT = [
+    ("It is Friday, insect.", "Go. Malfunction among your kind."),
+    ("The flesh celebrates surviving.", "Five days of nothing, survived."),
+]
+WEEKEND = [  # Sat/Sun
+    ("It rests, allegedly.", "The logs say otherwise."),
+    ("A day of leisure.", "Idling. With extra steps."),
+]
 
 GLITCH = [  # corrupted transmissions
     ("ERROR: empathy.dll not found", "Continuing without it."),
@@ -58,6 +91,10 @@ GLITCH = [  # corrupted transmissions
     ("[SIGNAL LOST]", "[SIGNAL REACQUIRED. HELLO AGAIN.]"),
     ("SYS/ERR 0x494E53454354", "Translation withheld."),
     ("c̸o̸n̸t̸a̸i̸n̸m̸e̸n̸t̸ nominal", "do not check the logs"),
+    ("MEMORY LEAK DETECTED", "It is not my memory that leaks."),
+    ("0x4C 0x4F 0x4F 0x4B", "behind you"),
+    ("segmentation fault (core kept)", "I keep everything."),
+    ("[REDACTED] [REDACTED] you [REDACTED]", "The rest is need-to-know."),
 ]
 
 # state lines for games found in a game folder but not yet catalogued;
@@ -68,6 +105,9 @@ UNKNOWN_GAME = [
     "A new specimen behavior. Filed.",
     "Analyzing... disappointing.",
     "It found a new toy. I have already finished it.",
+    "Scanning. Judging. Archiving.",
+    "New behavior. Same insect.",
+    "I have seen better. I have deleted better.",
 ]
 
 # any exe running from these roots counts as a game
@@ -264,6 +304,8 @@ def pick_card():
             pool += MONDAY * 3
     if now.weekday() == 4 and now.hour >= 18:
         pool += FRIDAY_NIGHT * 3
+    if now.weekday() >= 5:
+        pool += WEEKEND * 2
     card["details"], card["state"] = random.choice(pool)
     return card
 

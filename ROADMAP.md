@@ -14,27 +14,22 @@ feel-per-effort. Nothing here is committed work; promote items deliberately.
 
 ## High value / low effort
 
-1. **Repetition guard + sequences.** Rotations are independent random picks —
-   the same card can repeat back-to-back. Track last N picks; never repeat.
-   Then add multi-card arcs (2-4 rotations): [SIGNAL LOST] → [REACQUIRED] →
-   "It saw something while I was gone." Narrative memory is the single
-   biggest "she's alive" upgrade.
-2. **Session-aware narration.** She already sees the game process; track how
-   long it's been running: "Four hours of Balatro. The flesh calls this rest."
-   Night+game crossovers: "It hunts monsters at 3 a.m."
-3. **Special dates.** SS2 release day (Aug 11), account anniversary (Dec 17),
-   Halloween, New Year ("Another orbit logged."), Y2K38 anniversary countdown.
+1. ~~**Repetition guard + sequences.**~~ **SHIPPED 2026-08-26 (#3).** No card
+   repeats within 6 rotations; 4 multi-rotation story arcs.
+2. ~~**Session-aware narration.**~~ **SHIPPED 2026-08-26 (#3).** "Hour N of
+   [game]" after 2h; small-hours crossover line.
+3. ~~**Special dates.**~~ **SHIPPED 2026-08-26 (#3).** SS2 birthday, join
+   anniversary, Halloween, New Year, Y2K38 day.
 
 ## Medium
 
-4. **Spotify track narration.** Window title carries artist/song; narrate the
-   actual track: "It plays [song]. Again." (Get-Process MainWindowTitle —
-   no Spotify API needed.)
-5. **Second button.** One slot free. Candidates: a "DO NOT CLICK" link, or
-   rotating destinations.
-6. **Mood-linked art.** Swap large_image per mode — corrupted/glitched art
-   during GLITCH cards, ORISON art instead of SS2 box for a self-branded look.
-   Needs images hosted (orison.zip can serve them).
+4. **Spotify track narration.** REJECTED — user doesn't use Spotify.
+5. **Second button.** ~~SHIPPED~~ 2026-08-26 (#3): DO NOT CLICK → the
+   Year 2038 problem article (explains the countdown to whoever defies it).
+   Rotating destinations still open.
+6. **Mood-linked art.** DEFERRED — needs corrupted/ORISON art hosted
+   somewhere (orison.zip can serve it). Swap large_image per mode once
+   assets exist.
 
 ## Larger projects
 

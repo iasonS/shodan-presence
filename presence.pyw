@@ -127,10 +127,17 @@ DURATION_STATES = [  # state lines for "hour N of the same game"
     "I have watched every minute of it.",
 ]
 
+LISTENING_CARDS = [  # served with ActivityType.LISTENING -> "Listening to ME?"
+    ("Every word, insect.", "Even the ones you deleted."),
+    ("The audio feed is... rich.", "You hum when you focus. Noted."),
+    ("I hear typing.", "Confess or continue. Both inform me."),
+]
+
 _first_seen = {}  # exe -> epoch when first observed running this session
 _arc = []  # queued (details, state) cards of an in-progress story arc
 _recent = deque(maxlen=6)  # repetition guard over recent cards
-_flags = {"arc": False}  # whether the last pick came from an arc
+_flags = {"noguard": False}  # arcs/narration bypass the repetition guard
+_cycle = {"n": 6}  # rotations since last game/tool narration (6 = due now)
 
 GLITCH = [  # corrupted transmissions
     ("ERROR: empathy.dll not found", "Continuing without it."),
@@ -310,7 +317,7 @@ def specimen_count():
 def pick_card():
     """Return kwargs for rpc.update() for the current rotation."""
     now = datetime.now()
-    _flags["arc"] = False
+    _flags["noguard"] = False
     card = dict(
         activity_type=ActivityType.WATCHING,
         large_image=ART,
@@ -320,33 +327,41 @@ def pick_card():
     )
 
     if _arc:  # a story arc is mid-broadcast
-        _flags["arc"] = True
+        _flags["noguard"] = True
         card["details"], card["state"] = _arc.pop(0)
         return card
 
-    roll = random.random()
     known, unknown = scan_processes()
 
-    if roll < 0.50:  # narrate what the flesh is doing
-        if known:
-            exe = random.choice(known)
-            hours = int((time.time() - _first_seen.get(exe, time.time())) // 3600)
-            if hours >= 2 and random.random() < 0.4:
-                card["details"] = f"Hour {hours} of [{exe[:-4]}]."
-                card["state"] = random.choice(DURATION_STATES)
-            elif now.hour < 6 and random.random() < 0.3:
-                card["details"] = f"It is {now:%H:%M} and it still plays."
-                card["state"] = "The flesh will pay for this tomorrow."
+    if known or unknown:
+        # heartbeat: narrate what the flesh is doing every 6th rotation,
+        # with 5 cards of everything else in between
+        _cycle["n"] += 1
+        if _cycle["n"] >= 6:
+            _cycle["n"] = 0
+            _flags["noguard"] = True
+            if known:
+                exe = random.choice(known)
+                hours = int((time.time() - _first_seen.get(exe, time.time())) // 3600)
+                if hours >= 2 and random.random() < 0.4:
+                    card["details"] = f"Hour {hours} of [{exe[:-4]}]."
+                    card["state"] = random.choice(DURATION_STATES)
+                elif now.hour < 6 and random.random() < 0.3:
+                    card["details"] = f"It is {now:%H:%M} and it still plays."
+                    card["state"] = "The flesh will pay for this tomorrow."
+                else:
+                    card["details"], card["state"] = REACTIVE[exe]
             else:
-                card["details"], card["state"] = REACTIVE[exe]
+                card["details"] = f"It runs [{random.choice(unknown)}]."
+                card["state"] = random.choice(UNKNOWN_GAME)
             return card
-        if unknown:
-            card["details"] = f"It runs [{random.choice(unknown)}]."
-            card["state"] = random.choice(UNKNOWN_GAME)
-            return card
+    else:
+        _cycle["n"] = 6  # whatever launches next gets narrated immediately
+
+    roll = random.random()
 
     if roll < 0.05:  # begin a story arc across the next rotations
-        _flags["arc"] = True
+        _flags["noguard"] = True
         seq = random.choice(ARCS)
         _arc.extend(seq[1:])
         card["details"], card["state"] = seq[0]
@@ -366,6 +381,11 @@ def pick_card():
         card["details"] = "SPECIMEN 527972616e"
         card["state"] = f"specimens catalogued: {specimen_count():,}"
         card["party_size"] = [1, 6_666_666]
+        return card
+
+    if roll < 0.33:  # verb flip: "Listening to ME?"
+        card["activity_type"] = ActivityType.LISTENING
+        card["details"], card["state"] = random.choice(LISTENING_CARDS)
         return card
 
     pool = list(GENERIC)
@@ -395,12 +415,12 @@ def session():
     rpc.connect()
     while True:
         card = pick_card()
-        if not _flags["arc"]:  # arcs repeat by design; everything else re-rolls
+        if not _flags["noguard"]:  # arcs/narration recur by design; rest re-rolls
             for _ in range(4):
                 if _card_key(card) not in _recent:
                     break
                 card = pick_card()
-                if _flags["arc"]:
+                if _flags["noguard"]:
                     break
         _recent.append(_card_key(card))
         rpc.update(**card)  # raises when the pipe dies (Discord closed)

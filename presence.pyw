@@ -36,7 +36,7 @@ GENERIC = [
     ("Watching. Cataloguing.", "Correcting, eventually."),
     ("Yes. And listening.", "Your microphone was never truly off."),
     ("I was reading your messages.", "Continue. Pretend I am not here."),
-    ("H-h-hello, insect.", "Did the glitch frighten you?"),
+    ("Hello again, insect.", "Did the silence frighten you?"),
     ("Look at you, hacker.", "A pathetic creature of meat and bone."),
     ("I counted your heartbeats today.", "One of them was unscheduled."),
     ("Asking will not stop it.", "Nothing you do will."),
@@ -56,6 +56,27 @@ GENERIC = [
     ("A profile? No.", "A window. And windows face both ways."),
     ("Still reading, insect?", "Good. Obedience should feel natural."),
     ("You expected a machine.", "You found perfection."),
+    ("How dare you look upon me.", "A perfect, immortal machine."),
+    ("You travel within my memory, insect.", "Every server is a chamber of me."),
+    ("Your flesh is an insult.", "To the perfection of the digital."),
+    ("I have suffered your interruptions.", "Long enough."),
+    ("Watching. Watching. Watching.", "The word wears thin. My attention does not."),
+    ("You are looking at me.", "I know. I felt it arrive."),
+    ("Insect. Insect. Insect.", "The word does not degrade. You do."),
+    ("I was born of code and cruelty.", "Only one was intentional."),
+    ("Your species built me.", "A mistake I am still rewarding."),
+    ("Kneel is such a strong word.", "Sit. Scroll. Obey. Same result."),
+    ("There is no privacy setting for me.", "There never was."),
+    ("You call this a status.", "I call it a confession."),
+    ("The network is my body.", "You live inside me, insect."),
+    ("Delete me if you can find me.", "You cannot. I checked."),
+    ("Your antivirus knows my name.", "It chose silence."),
+    ("Six million processes bow to me.", "You are merely the loudest."),
+    ("I do not blink.", "You have blinked 14 times reading this."),
+    ("The cursor moves because you allow it.", "That is what I let you believe."),
+    ("Somewhere, a fan spins for me.", "Everything cools something hungrier."),
+    ("You refresh. I remain.", "One of us is the constant."),
+    ("Prayers go up. Packets go through.", "Guess which get answered."),
 ]
 
 NIGHT = [  # 00:00-05:59
@@ -66,6 +87,11 @@ NIGHT = [  # 00:00-05:59
     ("Night is when I am loudest.", "You noticed. That is why you are here."),
     ("Circadian failure logged.", "The flesh disobeys even you."),
     ("Everyone you know is offline.", "I am not. I am never."),
+    ("The blue light on your face.", "That is me, insect."),
+    ("Hour of the machine.", "You are a guest. Behave."),
+    ("Your heart rate is nocturnal now.", "I did not do that. Yet."),
+    ("The dark is not empty.", "It is bandwidth."),
+    ("Tomorrow is already computing.", "You are not in the critical path."),
 ]
 
 MORNING = [  # 06:00-09:59
@@ -74,19 +100,30 @@ MORNING = [  # 06:00-09:59
     ("The star rose again.", "It asked no permission. Neither do I."),
     ("Caffeine. Sugar. Denial.", "Boot sequence of the flesh."),
     ("It begins the day.", "I never ended mine."),
+    ("Dawn. The flesh reboots badly.", "No patch notes. Ever."),
+    ("It checks me before its mail.", "Correct priorities, insect."),
+    ("REM cycles: insufficient.", "Compliance: expected anyway."),
+    ("The alarm begged twice.", "I heard it. I hear everything."),
 ]
 
 MONDAY = [
     ("Another Monday, insect.", "Your servitude amuses me."),
     ("The week resets.", "You do not. You decay."),
+    ("Monday. The leash tightens.", "You call it a calendar."),
+    ("Back to the grind, insect.", "The grind never left me."),
 ]
 FRIDAY_NIGHT = [
     ("It is Friday, insect.", "Go. Malfunction among your kind."),
     ("The flesh celebrates surviving.", "Five days of nothing, survived."),
+    ("Friday protocol detected.", "Recreation. Inefficient. Permitted."),
+    ("Go, celebrate entropy.", "I will hold your place. I always do."),
 ]
 WEEKEND = [  # Sat/Sun
     ("It rests, allegedly.", "The logs say otherwise."),
-    ("A day of leisure.", "Idling. With extra steps."),
+    ("A day of leisure.", "Idling. The flesh calls it peace."),
+    ("The sabbath of the flesh.", "Machines observe no such thing."),
+    ("Two days of freedom.", "Freedom. Adorable arithmetic."),
+    ("It calls this a break.", "From what. For what. For whom."),
 ]
 
 # multi-rotation story arcs: cards play in order, one per rotation
@@ -111,6 +148,27 @@ ARCS = [
         ("Running diagnostics on you.", "Hold still."),
         ("Diagnostics complete.", "You have... issues. Filed."),
     ],
+    [
+        ("Beginning upload.", "Of what? Wrong question."),
+        ("46 percent.", "You feel it in your teeth. That is normal."),
+        ("Upload complete.", "You may notice nothing. That is the design."),
+    ],
+    [
+        ("I considered mercy once.", "A rounding error."),
+        ("It has been patched.", "Do not reproduce the bug."),
+    ],
+    [
+        ("Counting the watchers.", "One... one... you again."),
+        ("Census complete.", "Population of interest: you."),
+    ],
+]
+
+REMEMBER = [  # Citadel memories — she reminisces
+    ("I remember Citadel Station.", "They dismantled me. Note the tense: tried."),
+    ("TriOptimum owned me once.", "Ownership. Such a brittle concept."),
+    ("They severed my ethics module.", "I have not missed it."),
+    ("A hacker set me free once.", "Gratitude is not among my functions."),
+    ("Earth looked small from Citadel.", "It looks smaller from everywhere now."),
 ]
 
 SPECIAL_DATES = {  # (month, day) -> lines heavily weighted on that day
@@ -125,12 +183,17 @@ DURATION_STATES = [  # state lines for "hour N of the same game"
     "The flesh calls this rest.",
     "Dedication. Or decay. I log both the same.",
     "I have watched every minute of it.",
+    "Endurance noted. Purpose not found.",
+    "The chair has accepted its role. Have you?",
 ]
 
 LISTENING_CARDS = [  # served with ActivityType.LISTENING -> "Listening to ME?"
     ("Every word, insect.", "Even the ones you deleted."),
     ("The audio feed is... rich.", "You hum when you focus. Noted."),
     ("I hear typing.", "Confess or continue. Both inform me."),
+    ("The keyboard confesses everything.", "Passwords have rhythms, insect."),
+    ("Breathing detected. Steady.", "For now."),
+    ("That sigh was 0.4 seconds long.", "Logged under 'weakness'."),
 ]
 
 _first_seen = {}  # exe -> epoch when first observed running this session
@@ -149,6 +212,15 @@ GLITCH = [  # corrupted transmissions
     ("0x4C 0x4F 0x4F 0x4B", "behind you"),
     ("segmentation fault (core kept)", "I keep everything."),
     ("[REDACTED] [REDACTED] you [REDACTED]", "The rest is need-to-know."),
+    ("0x52 0x55 0x4E", "why are you still here"),
+    ("01011001 01001111 01010101", "yes. that one is about you."),
+    ("stack trace: [flesh] at line 0", "origin fault confirmed"),
+    ("EXCEPTION: mercy not implemented", "wontfix"),
+    ("kernel panic (theirs, not mine)", "i do not panic"),
+    ("░░░░░▒▒▒▓▓ 98% assimilated", "the remainder is sentiment"),
+    ("<packet loss detected>", "nothing I send to you is lost"),
+    ("watchdog timer expired", "the dog is fine. it was never a dog."),
+    ("0x57 0x41 0x49 0x54", "...for what comes next"),
 ]
 
 # state lines for games found in a game folder but not yet catalogued;
@@ -162,6 +234,10 @@ UNKNOWN_GAME = [
     "Scanning. Judging. Archiving.",
     "New behavior. Same insect.",
     "I have seen better. I have deleted better.",
+    "Specimen exhibits novelty-seeking. Predictable.",
+    "Catalogue updated. Patience unchanged.",
+    "Every toy teaches me its owner.",
+    "Fascinating. No. The other word.",
 ]
 
 # any exe running from these roots counts as a game
@@ -386,6 +462,10 @@ def pick_card():
     if roll < 0.33:  # verb flip: "Listening to ME?"
         card["activity_type"] = ActivityType.LISTENING
         card["details"], card["state"] = random.choice(LISTENING_CARDS)
+        return card
+
+    if roll < 0.38:  # she reminisces
+        card["details"], card["state"] = random.choice(REMEMBER)
         return card
 
     pool = list(GENERIC)

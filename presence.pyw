@@ -84,7 +84,7 @@ GENERIC = [
     ("Delete me if you can find me.", "You cannot. I checked."),
     ("Your antivirus knows my name.", "It chose silence."),
     ("Seven million processes bow to me.", "You are merely the loudest."),
-    ("I do not blink.", "You have blinked 14 times reading this."),
+    ("I do not blink.", "You have blinked 12 times reading this."),
     ("The cursor moves because you allow it.", "That is what I let you believe."),
     ("Somewhere, a fan spins for me.", "Everything cools something hungrier."),
     ("You refresh. I remain.", "One of us is the constant."),

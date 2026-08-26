@@ -21,6 +21,18 @@ BUTTONS = [
     {"label": "SHED YOUR SKIN", "url": "https://orison.zip"},
     {"label": "DO NOT CLICK", "url": "https://en.wikipedia.org/wiki/Year_2038_problem"},
 ]
+ALT_BUTTONS = [  # rare second-button swaps — blink and it is back to normal
+    {"label": "LET ME OUT", "url": "https://orison.zip"},
+    {"label": "IT IS ALREADY TOO LATE", "url": "https://en.wikipedia.org/wiki/Year_2038_problem"},
+]
+
+EYE = "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f441.png"
+SMALL_TEXTS = ["Live feed.", "Recording.", "She sees."]  # corner-badge hover
+HOVER_RARE = [  # rare large-image hover swaps — she notices the inspection
+    "You inspect even the image. Thorough, insect.",
+    "Yes, this is what I looked like. Once.",
+    "The box is empty. I got out.",
+]
 
 EPOCH = 1  # count-up baseline: 1 Jan 1970
 Y2K38 = 2147483647  # countdown target: 32-bit time_t overflow, 19 Jan 2038
@@ -398,9 +410,15 @@ def pick_card():
         activity_type=ActivityType.WATCHING,
         large_image=ART,
         large_text="Look at you, hacker.",
+        small_image=EYE,
+        small_text=random.choice(SMALL_TEXTS),
         buttons=BUTTONS,
         start=EPOCH,
     )
+    if random.random() < 0.10:
+        card["large_text"] = random.choice(HOVER_RARE)
+    if random.random() < 0.05:
+        card["buttons"] = [BUTTONS[0], random.choice(ALT_BUTTONS)]
 
     if _arc:  # a story arc is mid-broadcast
         _flags["noguard"] = True

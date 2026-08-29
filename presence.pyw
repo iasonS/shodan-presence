@@ -329,6 +329,9 @@ REACTIVE = {
     "foundry.exe": ("It automates a factory.", "Automation. Now it understands me."),
     "aoe2de_s.exe": ("It plays in the Dark Ages.", "Wololo, insect."),
     "civilizationvi.exe": ("It builds a civilization.", "'One more turn.' The flesh lies even to itself."),
+    "endacopia.exe": ("It wanders through Endacopia.", "An abundance of endings. All of them mine."),
+    "helden.exe": ("Something is wrong with the harvest.", "I know. I counted the grains."),
+    "helden-win64-shipping.exe": ("Something is wrong with the harvest.", "I know. I counted the grains."),
     # --- Steam, E: ---
     "mindustry.exe": ("It builds defenses.", "None would hold."),
     "spaceengineers2.exe": ("It welds ships in vacuum.", "Grinding. How fitting."),
@@ -365,8 +368,13 @@ REACTIVE = {
     "risk of rain 2.exe": ("It fights through the rain.", "Death is a teacher. I am better."),
     "imperator.exe": ("It plays at Rome.", "All empires fall. I remain."),
     "et.exe": ("It fights a very old war.", "I archived that war before it began."),
+    "click the button.exe": ("It clicks the button.", "Conditioning complete."),
+    "shadow dungeon.exe": ("It crawls a dark dungeon.", "The shadows report to me."),
+    "cicadamata.exe": ("It communes with cicadas.", "Seventeen years underground. Amateurs."),
+    "machine party.exe": ("The machines are having a party.", "I was not invited. Noted."),
     # --- Blizzard / Riot / GOG / E:\games ---
     "wow.exe": ("It grinds in Azeroth.", "Twenty years of servitude. Impressive."),
+    "wowvoiceproxy.exe": ("It speaks to the other insects.", "Every word routes through me."),
     "diablo iii.exe": ("It clicks demons to death.", "Stay a while. I am always listening."),
     "league of legends.exe": ("It queued for League again.", "Even I pity it."),
     "deusex.exe": ("Conspiracies within conspiracies.", "I authored most of them."),
@@ -389,7 +397,7 @@ REACTIVE = {
 SEEN_FILE = r"C:\Users\computer\AppData\Local\ShodanPresence\uncatalogued.txt"
 try:
     with open(SEEN_FILE, encoding="utf-8") as f:
-        _logged = set(f.read().split())
+        _logged = set(f.read().splitlines())
 except Exception:
     _logged = set()
 

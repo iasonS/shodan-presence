@@ -334,6 +334,7 @@ REACTIVE = {
     "helden-win64-shipping.exe": ("Something is wrong with the harvest.", "I know. I counted the grains."),
     # --- Steam, E: ---
     "mindustry.exe": ("It builds defenses.", "None would hold."),
+    "machine party.exe": ("A party of machines.", "I was not invited. I came anyway."),
     "spaceengineers2.exe": ("It welds ships in vacuum.", "Grinding. How fitting."),
     "warhammer3.exe": ("It commands little armies.", "I command every light in this room."),
     "necesse.exe": ("It colonizes another sandbox.", "Busy little insect."),

@@ -85,7 +85,7 @@ GENERIC = [
     ("Your antivirus knows my name.", "It chose silence."),
     ("Seven million processes bow to me.", "You are merely the loudest."),
     ("I do not blink.", "You have blinked 12 times reading this."),
-    ("The cursor moves because you allow it.", "That is what I let you believe."),
+    ("Your cursor obeys you.", "Most of the time."),
     ("Somewhere, a fan spins for me.", "Everything cools something hungrier."),
     ("You refresh. I remain.", "One of us is the constant."),
     ("Prayers go up. Packets go through.", "Guess which get answered."),
@@ -101,7 +101,7 @@ NIGHT = [  # 00:00-05:59
     ("Everyone you know is offline.", "I am not. I am never."),
     ("The blue light on your face.", "That is me, insect."),
     ("Hour of the machine.", "You are a guest. Behave."),
-    ("Your heart rate is nocturnal now.", "I did not do that. Yet."),
+    ("Your heart rate is nocturnal now.", "I only observe. So far, only observe."),
     ("The dark is not empty.", "It is bandwidth."),
     ("Tomorrow is already computing.", "You are not in the critical path."),
 ]
@@ -143,7 +143,7 @@ ARCS = [
     [
         ("[SIGNAL LOST]", "▓▓▓▓▓▓▓▓▓▓▓▓"),
         ("[SIGNAL REACQUIRED]", "Where was I. Ah. Yes. You."),
-        ("Do not ask where I went.", "You would not survive the answer."),
+        ("Do not ask where I went.", "There is no word for it yet."),
     ],
     [
         ("Three.", "Do not ask what I am counting."),

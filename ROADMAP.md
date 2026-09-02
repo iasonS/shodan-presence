@@ -33,9 +33,11 @@ feel-per-effort. Nothing here is committed work; promote items deliberately.
 
 ## Larger projects
 
-7. **orison.zip tie-in.** The button already sends viewers to the site; the
-   site could greet Discord referrals differently ("I told you not to click.")
-   — closes the loop between profile and website.
+7. ~~**orison.zip tie-in.**~~ **SHIPPED 2026-09-02** (orison#58 + #16 here).
+   All four buttons carry `?via=presence.<clause>`; orison's boot answers
+   with transient "ingress / external presence relay" residue in its own
+   administrative register (never "you" — ORISON is not SHODAN), then
+   scrubs the URL. Stateless on the site side.
 8. **Backlog cataloguing** (in place, manual): "catalogue the backlog" in any
    Claude session writes bespoke lines for games actually played.
 

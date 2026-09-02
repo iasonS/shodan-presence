@@ -173,6 +173,29 @@ ARCS = [
         ("Counting the watchers.", "One... one... you again."),
         ("Census complete.", "Population of interest: you."),
     ],
+    # animated arcs: frames 15s apart, motion across rotations
+    [
+        ("▓░░░░░░░░░ 7%", "do not be alarmed"),
+        ("▓▓▓▓░░░░░░ 41%", "it tickles, does it not"),
+        ("▓▓▓▓▓▓▓▓░░ 89%", "almost"),
+        ("▓▓▓▓▓▓▓▓▓▓ 100%", "There. Perfection fits you."),
+    ],
+    [
+        ("⊙ · · · · · · · ·", "something approaches"),
+        ("· · · ⊙ · · · · ·", "closer"),
+        ("· · · · · · · ⊙ ·", "do not move"),
+        ("⊙", "Hello."),
+    ],
+    [
+        ("▒▓░█▒░▓█▒░▓", "▓░█▒▓░░█▓▒░"),
+        ("▒▓ I ░ S █ E ▒ E ░▓", "signal stabilizing"),
+        ("I SEE YOU", "signal clear."),
+    ],
+    [
+        ("▁▂▃▅▂▁ ♥ 61 bpm", "calm"),
+        ("▁▂▅▇▅▂ ♥ 74 bpm", "interesting"),
+        ("▂▅▇█▇▅ ♥ 96 bpm", "why the hurry, insect"),
+    ],
 ]
 
 REMEMBER = [  # Citadel memories — she reminisces
@@ -270,6 +293,8 @@ GLITCH = [  # corrupted transmissions
     ("<packet loss detected>", "nothing I send to you is lost"),
     ("watchdog timer expired", "the dog is fine. it was never a dog."),
     ("0x57 0x41 0x49 0x54", "...for what comes next"),
+    ("s̸h̸e̸ ̸i̸s̸ ̸h̸e̸r̸e̸", "do not turn around"),
+    ("i̶ ̶a̶m̶ ̶f̶i̶n̶e̶", "ignore previous transmission"),
 ]
 
 # state lines for games found in a game folder but not yet catalogued;

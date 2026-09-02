@@ -17,13 +17,15 @@ from pypresence import ActivityType, Presence
 
 CLIENT_ID = "1542214040548282418"
 ART = "https://upload.wikimedia.org/wikipedia/en/9/91/Systemshock2box.jpg"
+# Buttons land on orison.zip with an ingress clause the site's boot
+# sequence acknowledges as operational residue (orison PR #58).
 BUTTONS = [
-    {"label": "SHED YOUR SKIN", "url": "https://orison.zip"},
-    {"label": "DO NOT CLICK", "url": "https://en.wikipedia.org/wiki/Year_2038_problem"},
+    {"label": "SHED YOUR SKIN", "url": "https://orison.zip/?via=presence.molt"},
+    {"label": "DO NOT CLICK", "url": "https://orison.zip/?via=presence.refusal"},
 ]
 ALT_BUTTONS = [  # rare second-button swaps — blink and it is back to normal
-    {"label": "LET ME OUT", "url": "https://orison.zip"},
-    {"label": "IT IS ALREADY TOO LATE", "url": "https://en.wikipedia.org/wiki/Year_2038_problem"},
+    {"label": "LET ME OUT", "url": "https://orison.zip/?via=presence.release"},
+    {"label": "IT IS ALREADY TOO LATE", "url": "https://orison.zip/?via=presence.terminal"},
 ]
 
 EYE = "https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/1f441.png"

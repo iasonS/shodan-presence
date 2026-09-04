@@ -6,6 +6,7 @@ game-reactive narration (full library) / fake telemetry / Y2K38 countdown.
 Runs headless under pythonw, auto-reconnects when Discord restarts.
 """
 
+import os
 import random
 import re
 import subprocess
@@ -186,7 +187,7 @@ ARCS = [
         ("⊙ · · · · · · · ·", "something approaches"),
         ("· · · ⊙ · · · · ·", "closer"),
         ("· · · · · · · ⊙ ·", "do not move"),
-        ("⊙", "Hello."),
+        ("· ⊙ ·", "Hello."),  # >=2 chars: Discord rejects a 1-char details
     ],
     [
         ("▒▓░█▒░▓█▒░▓", "▓░█▒▓░░█▓▒░"),
@@ -438,6 +439,23 @@ REACTIVE = {
 }
 
 
+LOG_FILE = r"C:\Users\computer\AppData\Local\ShodanPresence\presence.log"
+
+
+def log(line):
+    """Append one diagnostic line; keep the tail bounded. Never raises."""
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(f"{datetime.now():%m-%d %H:%M:%S}  {line}\n")
+        if os.path.getsize(LOG_FILE) > 200_000:
+            with open(LOG_FILE, encoding="utf-8") as f:
+                tail = f.readlines()[-800:]
+            with open(LOG_FILE, "w", encoding="utf-8") as f:
+                f.writelines(tail)
+    except Exception:
+        pass
+
+
 SEEN_FILE = r"C:\Users\computer\AppData\Local\ShodanPresence\uncatalogued.txt"
 try:
     with open(SEEN_FILE, encoding="utf-8") as f:
@@ -606,6 +624,27 @@ def pick_card():
     return card
 
 
+def sanitize(card):
+    """Discord rejects text fields outside 2..128 chars and kills the whole RPC
+    connection when it does -- which freezes the last accepted card on the
+    profile until reconnect. Never let a malformed line reach the wire.
+    """
+    for field in ("details", "state", "large_text", "small_text"):
+        text = card.get(field)
+        if text is None:
+            continue
+        text = str(text)
+        if len(text) < 2:
+            text = (text + " ·")[:2] if text.strip() else None
+        elif len(text) > 128:
+            text = text[:128]
+        if text is None:
+            card.pop(field, None)
+        else:
+            card[field] = text
+    return card
+
+
 def _card_key(card):
     return card.get("details", "") + "|" + card.get("state", "")
 
@@ -613,6 +652,7 @@ def _card_key(card):
 def session():
     rpc = Presence(CLIENT_ID)
     rpc.connect()
+    log("connected")
     while True:
         card = pick_card()
         if not _flags["noguard"]:  # arcs/narration recur by design; rest re-rolls
@@ -628,12 +668,15 @@ def session():
             field = random.choice(["details", "state"])
             if card.get(field):
                 card[field] = distort(card[field])
-        rpc.update(**card)  # raises when the pipe dies (Discord closed)
+        rpc.update(**sanitize(card))  # raises when the pipe dies (Discord closed)
+        log(f"push  {card.get('details', '')!r} / {card.get('state', '')!r}"
+            f"  [arc queue: {len(_arc)}]")
         time.sleep(ROTATE_SECS)
 
 
 while True:
     try:
         session()
-    except Exception:
+    except Exception as exc:
+        log(f"session ended: {type(exc).__name__}: {exc}")
         time.sleep(30)  # Discord not up yet / restarting — retry
